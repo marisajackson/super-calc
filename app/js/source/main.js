@@ -5,11 +5,12 @@
 
   function initialize(){
     $('#title').click(title);
-    $('.button').click(push);
     $('.number').click(display);
     $('.clear').click(clear);
     $('.decimal').click(decimal);
     $('.negative').click(negate);
+    $('#push').click(push);
+    $('.operator').click(operator);
   }
 
   function title(){
@@ -37,6 +38,8 @@
     var reset = this.textContent;
     if (reset === 'ce'){
       $('#display').text(0);
+    } else {
+      $('#queue').empty();
     }
   }
 
@@ -53,8 +56,65 @@
     $('#display').text(output * -1);
     }
 
+  function operator(){
+    var op = $(this).data('op');
+    var x = $('#queue > div:nth-child(1)').text() * 1;
+    var y = $('#queue > div:nth-child(2)').text() * 1;
+    var z;
+
+    switch(op){
+      case 'add':
+        z = x + y;
+        break;
+      case 'subtract':
+        z = x - y;
+        break;
+      case 'multiply':
+        z = x * y;
+        break;
+      case 'divide':
+        z = y / x;
+        break;
+      case 'exponent':
+        z = Math.pow(y,x);
+        break;
+      case 'root':
+        z = Math.sqrt(x);
+        break;
+      case 'factor':
+        z = fact(x);
+        break;
+      case 'sum':
+        z = sum();
+    }
+
+    $('#display').text(z);
+  }
+
+  function sum(){
+    var total = 0;
+    $('#queue > div').each(function(index, div){
+      var x = div.textContent * 1;
+      total += x;
+    });
+
+    return total;
+  }
+
+  function fact(x) {
+      var product = 1;
+      for(var i = 1; i <= x; i++){
+        product *= i;
+      }
+      return product;
+  }
+
   function push(){
-    $(this).css('box-shadow', '0px 0px 0px 0px');
+    var display = $('#display').text();
+    $('#display').text(0);
+    var $div = $('<div>');
+    $div.text(display);
+    $('#queue').prepend($div);
   }
 
 
